@@ -1,9 +1,40 @@
 // Selectores
 const criptomonedasSelect = document.querySelector("#criptomonedas");
+const formulario = document.querySelector("#formulario");
+const monedaSelect = document.querySelector("#moneda");
+
+const objBusqueda = {
+  moneda: "",
+  criptomoneda: "",
+};
 
 window.onload = () => {
   consultarCriptoMoneda();
+  formulario.addEventListener("submit", submitFormulario);
+  criptomonedasSelect.addEventListener("change", handleSelect);
+  monedaSelect.addEventListener("change", handleSelect);
 };
+
+function handleSelect(e) {
+  e.preventDefault();
+  objBusqueda[e.target.name] = e.target.value;
+}
+
+function submitFormulario(e) {
+  e.preventDefault();
+  const { moneda, criptomoneda } = objBusqueda;
+  if (moneda === "" || criptomoneda === "") {
+    imprimirAlerta("Ambos campos deben ser obligatorios");
+    return;
+  }
+  // Consultar API
+}
+
+function imprimirAlerta(mensaje) {
+  const alertMsj = document.createElement("p");
+  alertMsj.textContent = mensaje;
+  console.log(mensaje);
+}
 
 const obtenerCriptoMonedas = (criptomonedas) =>
   new Promise((resolve) => {
