@@ -2,6 +2,7 @@
 const criptomonedasSelect = document.querySelector("#criptomonedas");
 const formulario = document.querySelector("#formulario");
 const monedaSelect = document.querySelector("#moneda");
+const resultado = document.quersySelector("#resultado");
 
 const objBusqueda = {
   moneda: "",
@@ -28,6 +29,19 @@ function submitFormulario(e) {
     return;
   }
   // Consultar API
+  consultarAP();
+}
+function consultarAP() {
+  const { moneda, criptomoneda } = objBusqueda;
+  const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((res) => imprimirConsulta(res.DISPLAY[criptomoneda][moneda]));
+}
+function imprimirConsulta(datos) {
+  const { PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOURS, LASTUPDATE } = datos;
+  const price = document.createElement("p");
+  price;
 }
 
 function imprimirAlerta(mensaje) {
