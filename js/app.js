@@ -2,7 +2,7 @@
 const criptomonedasSelect = document.querySelector("#criptomonedas");
 const formulario = document.querySelector("#formulario");
 const monedaSelect = document.querySelector("#moneda");
-const resultado = document.quersySelector("#resultado");
+const resultado = document.querySelector("#resultado");
 
 const objBusqueda = {
   moneda: "",
@@ -34,16 +34,40 @@ function submitFormulario(e) {
 function consultarAP() {
   const { moneda, criptomoneda } = objBusqueda;
   const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
+  mostrarSpinner();
   fetch(url)
     .then((res) => res.json())
     .then((res) => imprimirConsulta(res.DISPLAY[criptomoneda][moneda]));
 }
 function imprimirConsulta(datos) {
+  limpiarHTML();
   const { PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOURS, LASTUPDATE } = datos;
   const price = document.createElement("p");
-  price;
+  price.classList.add("precio");
+  price.innerHTML = `El precio es: <span>${PRICE}`;
+
+  const precioAlto = document.createElement("p");
+  precioAlto.innerHTML = `<p> Precio más alto del día <span>${HIGHDAY}</span>`;
+  const precioBajo = document.createElement("p");
+  precioBajo.innerHTML = `<p> Precio más bajo del día <span>${LOWDAY}</span>`;
+  const ultimasHoras = document.createElement("p");
+  ultimasHoras.innerHTML = `<p>Variación en las últimas 24 horas: <span>${CHANGEPCT24HOURS}</span>`;
+  const ultimaActualizacion = document.createElement("p");
+  ultimaActualizacion.innerHTML = `<p> Última actualización: <span>${
+    LASTUPDATE === "Just Now" ? "Justo ahora" : LASTUPDATE
+  }</span>`;
+
+  resultado.appendChild(price);
+  resultado.appendChild(precioAlto);
+  resultado.appendChild(precioBajo);
+  resultado.appendChild(ultimaActualizacion);
 }
 
+function limpiarHTML() {
+  while (resultado.firstChild) {
+    resultado.removeChild(resultado.firstChild);
+  }
+}
 function imprimirAlerta(mensaje) {
   const alerta = document.querySelector(".error");
   if (!alerta) {
@@ -85,4 +109,19 @@ function selectCriptomonedas(criptomonedas) {
 
     criptomonedasSelect.appendChild(option);
   });
+}
+
+function mostrarSpinner() {
+  limpiarHTML();
+
+  const spinner = document.createElement("div");
+  spinner.classList.add("spinner");
+
+  spinner.innerHTML = `
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
+  `;
+
+  resultado.appendChild(spinner);
 }
