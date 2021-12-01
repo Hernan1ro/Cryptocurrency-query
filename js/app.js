@@ -31,9 +31,17 @@ function submitFormulario(e) {
 }
 
 function imprimirAlerta(mensaje) {
-  const alertMsj = document.createElement("p");
-  alertMsj.textContent = mensaje;
-  console.log(mensaje);
+  const alerta = document.querySelector(".error");
+  if (!alerta) {
+    const alertMsj = document.createElement("div");
+    alertMsj.classList.add("error");
+    alertMsj.textContent = mensaje;
+    formulario.appendChild(alertMsj);
+
+    setTimeout(function () {
+      alertMsj.remove();
+    }, 3000);
+  }
 }
 
 const obtenerCriptoMonedas = (criptomonedas) =>
