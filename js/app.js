@@ -31,14 +31,25 @@ function submitFormulario(e) {
   // Consultar API
   consultarAP();
 }
-function consultarAP() {
+async function consultarAP() {
   const { moneda, criptomoneda } = objBusqueda;
   const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
   mostrarSpinner();
-  fetch(url)
-    .then((res) => res.json())
-    .then((res) => imprimirConsulta(res.DISPLAY[criptomoneda][moneda]));
+  //with fetch
+  // fetch(url)
+  //   .then((res) => res.json())
+  //   .then((res) => imprimirConsulta(res.DISPLAY[criptomoneda][moneda]));
+
+  //with try and catch
+  try {
+    const consulta = await fetch(url);
+    const respuesta = await consulta.json();
+    imprimirConsulta(respuesta.DISPLAY[criptomoneda][moneda]);
+  } catch (err) {
+    console.log(err);
+  }
 }
+
 function imprimirConsulta(datos) {
   limpiarHTML();
   const { PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOURS, LASTUPDATE } = datos;
@@ -87,14 +98,25 @@ const obtenerCriptoMonedas = (criptomonedas) =>
     resolve(criptomonedas);
   });
 
-function consultarCriptoMoneda() {
+async function consultarCriptoMoneda() {
   const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=20&tsym=USD`;
-  fetch(url)
-    .then((response) => response.json())
-    .then((response) => {
-      return obtenerCriptoMonedas(response.Data);
-    })
-    .then((criptomonedas) => selectCriptomonedas(criptomonedas));
+  // whith fetch
+  // fetch(url)
+  //   .then((response) => response.json())
+  //   .then((response) => {
+  //     return obtenerCriptoMonedas(response.Data);
+  //   })
+  //   .then((criptomonedas) => selectCriptomonedas(criptomonedas));
+
+  //try and catch
+  try {
+    const consulta = await fetch(url);
+    const respuesta = await consulta.json();
+    const criptomonedas = await obtenerCriptoMonedas(respuesta.Data);
+    selectCriptomonedas(criptomonedas);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function selectCriptomonedas(criptomonedas) {
